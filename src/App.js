@@ -32,7 +32,8 @@ class App extends Component {
     this.state= {
       input:'',
       imageUrl:'',
-      box:{}
+      box:{},
+      route:'signin'
     }
   }
   // storing bounding box values obtained from face_detection api call
@@ -68,6 +69,10 @@ class App extends Component {
          .then(response =>this.displayFaceBox( this.calculateFaceLocation(response)))
          .catch(err => console.log(err))
   }
+
+  onRouteChange = () =>{
+    this.setState({route:'home'});
+  }
   
   render(){
     return (
@@ -76,7 +81,10 @@ class App extends Component {
         params={paricleoptions}
         />
         <Navigation />
-        <Signin/>
+        {this.state.route === 'signin'
+         ? <Signin onRouteChange ={this.onRouteChange}/>
+         :
+         <div>
         <Logo />
         <Rank/>
         <ImageLinkForm 
@@ -84,6 +92,8 @@ class App extends Component {
         onButtonSubmit={this.onButtonSubmit}
         />
         <FaceRecognition box={this.state.box} imageUrl={this.state.imageUrl}/>
+        </div>
+      }
       </div>
     );
   }
