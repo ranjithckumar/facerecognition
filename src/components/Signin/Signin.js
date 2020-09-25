@@ -1,7 +1,7 @@
 import React from 'react';
 
 // This signin form is added using tychyons forms and cards
-const Signin = ({OnRouteChange}) =>{
+const Signin = ({onRouteChange}) =>{
     return(   
       <article className="br3 ba dark-gray b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-2 center">
         <main className="pa4 black-80">
@@ -19,7 +19,7 @@ const Signin = ({OnRouteChange}) =>{
        </fieldset>
       <div className="">
         <input 
-        onClick={OnRouteChange}
+        onClick={onRouteChange}
         className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" type="submit" value="Sign in"
         />
       </div>
