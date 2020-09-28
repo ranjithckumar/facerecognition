@@ -38,6 +38,13 @@ class App extends Component {
       isSignedIn:false
     }
   }
+
+  //  fetching data from facerecognition-api using fetch-api
+  // componentDidMount(){
+  //   fetch('http://localhost:5000')
+  //   .then(response => response.json())
+  //   .then(console.log);
+  // }
   // storing bounding box values obtained from face_detection api call
   calculateFaceLocation = (data) =>{
     const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
