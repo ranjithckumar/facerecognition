@@ -35,7 +35,14 @@ class App extends Component {
       imageUrl:'',
       box:{},
       route:'signin',
-      isSignedIn:false
+      isSignedIn:false,
+      users : {
+            id: '',
+            name:'',
+            email:'',
+            entries:0,
+            joined: new Date()
+      }
     }
   }
 
@@ -58,6 +65,19 @@ class App extends Component {
       bottomRow: height - (clarifaiFace.bottom_row * height)
     }
   }
+
+  // after registration users data will added 
+  loadUsers = (data) =>{
+    this.setState ({users:
+          {
+            id: data.id,
+            name: data.name,
+            email:  data.email,
+            entries: data.entries,
+            joined:  data.joined
+          }
+        })
+  }
   // set values for box object
   displayFaceBox = (box) => {
     // console.log(box);
@@ -67,7 +87,7 @@ class App extends Component {
   onInputChange = (event) =>{
    this.setState({input:event.target.value});
   }
-// On clicking detect button to detect faces in pictures by passing image url as input 
+// On clicking detect button to detect faces in Buttons by passing image url as input 
 // this sets imageUrl with a input url for detecting face
   onButtonSubmit = () =>{
    this.setState({imageUrl:this.state.input});
@@ -75,7 +95,22 @@ class App extends Component {
     // here we specify what model to we are using i.e FACE_DETECT or COLOR_MODEL
     app.models.predict(
       Clarifai.FACE_DETECT_MODEL,this.state.input)
-         .then(response =>this.displayFaceBox( this.calculateFaceLocation(response)))
+         .then(response =>{
+          fetch('http://localhost:5000/image', {
+            method: 'put',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              id: this.state.users.id
+            })
+          })
+            .then(response => response.json())
+            .then(count => {
+              this.setState(Object.assign(this.state.users, { entries: count}))
+            })
+
+        
+          this.displayFaceBox( this.calculateFaceLocation(response))
+        })
          .catch(err => console.log(err))
   }
 
@@ -100,7 +135,9 @@ class App extends Component {
         {this.state.route === 'home'
          ?  <div>
          <Logo />
-         <Rank/>
+         <Rank 
+         name ={this.state.users.name} 
+         entries ={this.state.users.entries}/>
          <ImageLinkForm 
          onInputChange={this.onInputChange} 
          onButtonSubmit={this.onButtonSubmit}
@@ -111,7 +148,7 @@ class App extends Component {
          (
            route === 'signin' ? 
            <Signin onRouteChange ={this.onRouteChange}/> :
-           <Register onRouteChange ={this.onRouteChange}/>
+           <Register loadUsers ={this.loadUsers} onRouteChange ={this.onRouteChange}/>
          )    
       }
       </div>
