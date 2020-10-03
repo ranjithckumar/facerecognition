@@ -46,13 +46,6 @@ class App extends Component {
     }
   }
 
-  //  fetching data from facerecognition-api using fetch-api
-  // componentDidMount(){
-  //   fetch('http://localhost:5000')
-  //   .then(response => response.json())
-  //   .then(console.log);
-  // }
-  // storing bounding box values obtained from face_detection api call
   calculateFaceLocation = (data) =>{
     const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
     const image = document.getElementById('inputimage');
@@ -147,7 +140,7 @@ class App extends Component {
          :
          (
            route === 'signin' ? 
-           <Signin onRouteChange ={this.onRouteChange}/> :
+           <Signin loadUsers= {this.loadUsers} onRouteChange ={this.onRouteChange}/> :
            <Register loadUsers ={this.loadUsers} onRouteChange ={this.onRouteChange}/>
          )    
       }
