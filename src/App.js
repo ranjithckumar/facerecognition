@@ -9,7 +9,7 @@ import Signin from './components/Signin/Signin';
 import Register from './components/Register/Register';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import './App.css';
-
+ 
 // Clarifai api key 
 const app = new Clarifai.App({
  apiKey: 'b49d8766d11d4623b4b03f409594f015'
@@ -45,6 +45,20 @@ class App extends Component {
       }
     }
   }
+  
+  // after registration users data will added 
+  loadUsers = (data) =>{
+    this.setState ({users:
+          {
+            id: data.id,
+            name: data.name,
+            email:  data.email,
+            entries: data.entries,
+            joined:  data.joined
+          }
+        })
+       
+  }
 
   calculateFaceLocation = (data) =>{
     const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
@@ -59,18 +73,6 @@ class App extends Component {
     }
   }
 
-  // after registration users data will added 
-  loadUsers = (data) =>{
-    this.setState ({users:
-          {
-            id: data.id,
-            name: data.name,
-            email:  data.email,
-            entries: data.entries,
-            joined:  data.joined
-          }
-        })
-  }
   // set values for box object
   displayFaceBox = (box) => {
     // console.log(box);
@@ -82,6 +84,7 @@ class App extends Component {
   }
 // On clicking detect button to detect faces in Buttons by passing image url as input 
 // this sets imageUrl with a input url for detecting face
+
   onButtonSubmit = () =>{
    this.setState({imageUrl:this.state.input});
      
@@ -89,20 +92,20 @@ class App extends Component {
     app.models.predict(
       Clarifai.FACE_DETECT_MODEL,this.state.input)
          .then(response =>{
-          fetch('http://localhost:5000/image', {
-            method: 'put',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-              id: this.state.users.id
+           if(response){
+            fetch('http://localhost:5000/image', {
+              method: 'put',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({
+                id: this.state.users.id
+              })
             })
-          })
-            .then(response => response.json())
-            .then(count => {
-              this.setState(Object.assign(this.state.users, { entries: count}))
-            })
-
-        
-          this.displayFaceBox( this.calculateFaceLocation(response))
+              .then(response => console.log(response.json()))
+              .then(count => {
+                this.setState(Object.assign(this.state.users, { entries:count}))
+              })      
+            this.displayFaceBox( this.calculateFaceLocation(response))
+           } 
         })
          .catch(err => console.log(err))
   }
