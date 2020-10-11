@@ -1,6 +1,5 @@
 import React, {Component}from 'react';
 import Particles from 'react-particles-js';
-import Clarifai from 'clarifai';
 import Navigation from './components/Navigation/Navigation';
 import Logo from './components/Logo/Logo';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
@@ -9,11 +8,7 @@ import Signin from './components/Signin/Signin';
 import Register from './components/Register/Register';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import './App.css';
- 
-// Clarifai api key 
-const app = new Clarifai.App({
- apiKey: 'b49d8766d11d4623b4b03f409594f015'
-})
+
 // react-particles-js package for background animation effect
 const paricleoptions= {
     particles: {
@@ -86,13 +81,17 @@ class App extends Component {
   }
 // On clicking detect button to detect faces in Buttons by passing image url as input 
 // this sets imageUrl with a input url for detecting face
-
+// here we specify what model to we are using i.e FACE_DETECT or COLOR_MODEL
   onButtonSubmit = () =>{
    this.setState({imageUrl:this.state.input});
-     
-    // here we specify what model to we are using i.e FACE_DETECT or COLOR_MODEL
-    app.models.predict(
-      Clarifai.FACE_DETECT_MODEL,this.state.input)
+          fetch('http://localhost:5000/imageurl', {
+              method: 'post',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({
+              input: this.state.input
+             })
+          })
+            .then(response => response.json())
          .then(response =>{
            if(response){
             fetch('http://localhost:5000/image', {
