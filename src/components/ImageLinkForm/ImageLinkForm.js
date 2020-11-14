@@ -4,7 +4,7 @@ const ImageLinkForm = ({onInputChange, onButtonSubmit}) =>{
     return(
         <div>
            <p className='f3'>
-            {'Detect faces in your picture.. Give it a try.'}
+            {'Detect faces in your picture.. Give it a try.Paste image URL'}
            </p>
            {/* // here adding styles using tachyons package */}
            <div className='center'>

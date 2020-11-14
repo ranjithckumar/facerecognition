@@ -84,7 +84,7 @@ class App extends Component {
 // here we specify what model to we are using i.e FACE_DETECT or COLOR_MODEL
   onButtonSubmit = () =>{
    this.setState({imageUrl:this.state.input});
-          fetch('https://ancient-ridge-12637.herokuapp.com/imageurl', {
+          fetch('http://localhost:4000/imageurl', {
               method: 'post',
               headers: {'Content-Type': 'application/json'},
               body: JSON.stringify({
@@ -94,7 +94,7 @@ class App extends Component {
             .then(response => response.json())
          .then(response =>{
            if(response){
-            fetch('https://ancient-ridge-12637.herokuapp.com/image', {
+            fetch('http://localhost:4000/image', {
               method: 'put',
               headers: {'Content-Type': 'application/json'},
               body: JSON.stringify({
